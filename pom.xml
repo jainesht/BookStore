@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	 
+<modelVersion>4.0.0</modelVersion>
+
+<groupId>com.infosys</groupId>
+  <artifactId>BookStoreApp</artifactId> 
+  <version>${project.version}</version>
+ <!--   <packaging>war</packaging> -->
+ <distributionManagement>
+<snapshotRepository>
+     <id>deployment</id>
+     <name>Internal Releases</name>
+     <url>http://vchniladpsci-08:8081/nexus/content/repositories/snapshots/</url>
+  </snapshotRepository>
+ <repository>
+     <id>deployment</id>
+     <name>Internal Releases</name>
+     <url>http://vchniladpsci-08:8081/nexus/content/repositories/releases/</url>
+  </repository> 
+  
+</distributionManagement>
+
+    <build>
+   
+    <defaultGoal>package</defaultGoal>
+
+
+    
+
+    <plugins>
+   
+   			 <!--<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.7</version>
+            <configuration>
+                <target>
+                    <zip destfile="${compressedReportFile}" basedir="${reportDir}" includes="*" encoding="UTF-8"/>
+                </target>
+            </configuration>
+        </plugin>-->
+   	   <plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-assembly-plugin</artifactId>
+  			<version>2.2.1</version>
+  			<configuration>
+  				<descriptors>
+  					<descriptor>src/main/assembly/zip.xml</descriptor>
+  				</descriptors>
+  			</configuration>
+  		</plugin>
+  		 
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+       <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
+           
+                    <webXml>WebContent\WEB-INF\web.xml</webXml>
+               
+          <warSourceDirectory>WebContent</warSourceDirectory>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+       <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.4.2</version>
+           <configuration>
+           <testFailureIgnore>true</testFailureIgnore>
+       <!--     <systemPropertyVariables>
+           		<webdriver.chrome.driver>${webdriver.chrome}</webdriver.chrome.driver>
+           </systemPropertyVariables>
+            <includes>
+                <include>**/TestRunnerTest.java</include>
+            </includes>    --> 
+           </configuration>
+       </plugin>
+       
+      <plugin> 
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.4.2</version>
+           <configuration>
+              
+           </configuration>
+       </plugin>
+       
+       
+       <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.1</version>
+            <configuration>
+                <source>1.7</source>
+                <target>1.7</target>
+                <encoding>UTF-8</encoding>
+            </configuration>
+        </plugin>
+      <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-failsafe-plugin</artifactId>
+    <version>2.12</version>
+    <executions>
+        <execution>
+            <id>integration-test</id>
+            <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+    </plugins>
+   </build>
+   <properties>
+   		 <webdriver.chrome>/home/gede/bin/chromedriver</webdriver.chrome>
+   		 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   		 <sonar.host.url>http://10.66.110.227:9000</sonar.host.url>   	   	
+   		 	<sonar.jdbc.url>http://10.66.110.227:9000</sonar.jdbc.url>  
+   		 <sonar.dynamic>reuseReports</sonar.dynamic>
+   		 <timestamp>${maven.build.timestamp}</timestamp>
+         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+         <project.version>3.0</project.version>
+  </properties>
+   
+  <profiles>
+    <profile>
+     <build>
+     <plugins>
+   <plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>emma-maven-plugin</artifactId>
+		<version>1.0-alpha-3</version>
+		<inherited>true</inherited> 
+		 <configuration>
+			<metadataFile>E:\WorkSpaceSonar\testing\target\coverage.em</metadataFile>
+			<metadataFile>E:\WorkSpaceSonar\testing\target\generated-classes\emma</metadataFile>		
+		
+		</configuration> 
+		 <executions>
+		  <execution>
+			<phase>process-classes</phase>
+			  <goals>
+				<goal>emma</goal>
+			</goals>
+		  </execution>
+		</executions>  		 
+	 </plugin>
+	 </plugins>
+	 </build>
+	 </profile>
+	 </profiles> 
+  
+  <dependencies>
+  
+
+<dependency>
+        <groupId>info.cukes</groupId>
+        <artifactId>cucumber-picocontainer</artifactId>
+        <version>1.2.2</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.picocontainer</groupId>
+        <artifactId>picocontainer</artifactId>
+        <version>2.14.1</version>
+    </dependency>
+    <dependency>
+        <groupId>info.cukes</groupId>
+        <artifactId>cucumber-junit</artifactId>
+        <version>1.2.2</version>
+        <scope>test</scope>
+    </dependency>
+    
+<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.11</version>
+  	</dependency>
+  <dependency>
+  		<groupId>org.apache.struts</groupId>
+  		<artifactId>struts2-core</artifactId>
+  		<version>2.1.8</version>
+  	</dependency>
+  	<dependency>
+		<groupId>org.apache.poi</groupId>
+		<artifactId>poi-ooxml</artifactId>
+		<version>3.5-beta5</version>
+	</dependency>
+	<dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+      <version>3.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-core-asl</artifactId>
+        <version>1.9.13</version>
+        <scope>compile</scope> 
+    </dependency>
+     <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-mapper-asl</artifactId>
+        <version>1.9.13</version>
+    </dependency>
+	<dependency>
+  		<groupId>jstl</groupId>
+  		<artifactId>jstl</artifactId>
+  		<version>1.2</version>
+  	</dependency>
+  	
+  	
+     <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-api-easymock</artifactId>
+        <version>1.5.5</version>
+    </dependency> 
+     <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>1.5.1</version> 
+    </dependency>
+    	
+    
+    <dependency>
+    <groupId>com.google.protobuf</groupId>
+    <artifactId>protobuf-java</artifactId>
+    <version>2.5.0</version>
+    </dependency>
+
+
+   
+  	<dependency>
+  		<groupId>javax.servlet</groupId>
+  		<artifactId>javax.servlet-api</artifactId>
+  		<version>3.1.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>commons-collections</groupId>
+  		<artifactId>commons-collections</artifactId>
+  		<version>3.2.1</version>
+  	</dependency>
+  	
+  	<dependency> 
+         <groupId>org.seleniumhq.selenium</groupId> 
+       <artifactId>selenium-java</artifactId> 
+       <version>2.43.1</version> 
+   </dependency>
+   <dependency>
+        <groupId>com.opera</groupId>
+        <artifactId>operadriver</artifactId>
+        <version>1.5</version>
+    </dependency>  
+   <dependency>
+	<groupId>xml-apis</groupId>
+	<artifactId>xml-apis</artifactId>
+	<version>1.4.01</version>
+</dependency>
+<dependency>
+	<groupId>xerces</groupId>
+	<artifactId>xercesImpl</artifactId>
+	<version>2.11.0</version>
+</dependency>
+   <dependency>
+	<groupId>xalan</groupId>
+	<artifactId>xalan</artifactId>
+	<version>2.7.1</version>
+</dependency>
+<dependency>
+	<groupId>org.w3c.css</groupId>
+	<artifactId>sac</artifactId>
+	<version>1.3</version>
+</dependency>
+<dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-server</artifactId>
+        <version>2.44.0</version>
+    </dependency>  
+
+<dependency>
+    <groupId>com.github.detro.ghostdriver</groupId>
+    <artifactId>phantomjsdriver</artifactId>
+    <version>1.1.0</version>
+</dependency>
+    <!--  -->
+    <dependency>
+    <groupId>commons-logging</groupId>
+    <artifactId>commons-logging</artifactId>
+    <version>1.1.3</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.3.1</version>
+</dependency>
+<dependency>
+  <groupId>org.seleniumhq.selenium</groupId>
+  <artifactId>selenium-ie-driver</artifactId>
+  <version>2.42.1</version>
+</dependency>
+
+   <dependency>
+	<groupId>info.cukes</groupId>
+	<artifactId>cucumber-java</artifactId>
+	<version>1.2.2</version>
+   </dependency>
+  
+
+   <dependency>
+	<groupId>org.seleniumhq.selenium</groupId>
+	<artifactId>selenium-chrome-driver</artifactId>
+	<version>2.26.0</version>
+</dependency>  
+<dependency>
+	<groupId>com.lazerycode.jmeter</groupId>
+	<artifactId>jmeter-maven-plugin</artifactId>
+	<version>1.9.1</version>
+</dependency>
+<dependency>
+	<groupId>com.lazerycode.jmeter</groupId>
+	<artifactId>jmeter-analysis-maven-plugin</artifactId>
+	<version>1.0.4</version>
+</dependency>
+<dependency>
+    <groupId>javax.servlet.jsp.jstl</groupId>
+    <artifactId>jstl-api</artifactId>
+    <version>1.2</version>
+    <exclusions>
+        <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
+            <artifactId>jsp-api</artifactId>
+            <groupId>javax.servlet.jsp</groupId>
+        </exclusion>
+    </exclusions>
+</dependency>
+  	<dependency>
+  <groupId>ch.fortysix</groupId>
+  <artifactId>maven-postman-plugin</artifactId>
+  <version>0.1.6</version>
+</dependency>
+
+       <!-- <dependency> 
+			<groupId>info.cukes</groupId> 
+			<artifactId>cucumber-junit</artifactId> 
+			<version>1.0.2</version> 
+			<scope>test</scope> 
+		</dependency> -->
+
+
+<dependency>
+		    <groupId>org.seleniumhq.selenium</groupId>
+		    <artifactId>selenium-firefox-driver</artifactId>
+		    <version>2.33.0</version>
+		</dependency> 
+		
+   </dependencies>
+    
+   </project>
